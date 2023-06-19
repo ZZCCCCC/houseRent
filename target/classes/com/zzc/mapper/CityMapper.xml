@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzc.mapper.CityMapper">
+
+    <select id="selectAllCity" resultType="com.zzc.entity.City">
+        select * from city
+    </select>
+    <select id="selectByCondition" resultType="com.zzc.entity.City">
+        select * from city
+        <where>
+            <if test="cityName != null and cityName !=''">
+                cityName like "%" #{cityName} "%"
+            </if>
+            <if test="cityAbbreviation != null and cityAbbreviation !=''">
+               and cityAbbreviation like "%" #{cityAbbreviation} "%"
+            </if>
+            <if test="cityCenter != null and cityCenter !=''">
+               and cityCenter like "%" #{cityCenter} "%"
+            </if>
+        </where>
+    </select>
+</mapper>

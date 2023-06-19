@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzc.mapper.UserHouseMapper">
+
+    <select id="selectAll" resultMap="com.zzc.mapper.HouseMapper.userHouse">
+        SELECT * FROM `user`,`house-user`,house,roomtype,bulid,estate,city
+        where `user`.userId=`house-user`.userId and `house-user`.roomId=house.roomId
+        and house.roomTypeId=roomtype.roomTypeId and bulid.buildId=house.buildId
+        and bulid.estateId=estate.estateId and estate.cityId=city.cityId
+    </select>
+
+    <resultMap id="userHouse" type="com.zzc.entity.userHouse">
+        <id property="userHouseId" column="userHouseId"></id>
+        <association property="user" resultMap="com.zzc.mapper.userMapper.user"></association>
+        <association property="house" resultMap="com.zzc.mapper.HouseMapper.house"></association>
+    </resultMap>
+</mapper>

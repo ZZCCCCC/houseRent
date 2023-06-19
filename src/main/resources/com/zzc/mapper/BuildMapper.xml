@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzc.mapper.BuildMapper">
+
+    <resultMap id="build" type="com.zzc.entity.Build">
+        <id property="buildId" column="buildId"></id>
+        <result property="buildName" column="buildName"></result>
+        <association property="estate" resultMap="com.zzc.mapper.EstateMapper.estate"></association>
+    </resultMap>
+    <insert id="insertBuild" parameterType="Map">
+        insert into bulid(buildName,estateId) value (#{buildName},#{estate})
+    </insert>
+    <update id="editeBuild">
+        UPDATE bulid SET buildName=#{buildName},estateId=#{estate} where buildId=#{rowId}
+    </update>
+    <delete id="deleteBuild">
+        delete  from bulid where buildId=#{buildId}
+    </delete>
+    <select id="selectAll" resultMap="build">
+        select b.*,e.estateName,e.estateAddress,c.cityId,c.cityName,c.cityCenter,c.cityAbbreviation
+        FROM bulid b ,estate e,city c
+        where b.estateId=e.estateId and e.cityId=c.cityId
+    </select>
+
+    <select id="buildByCondition" resultMap="build">
+        select b.*,e.estateName,e.estateAddress,c.cityId,c.cityName,c.cityCenter,c.cityAbbreviation
+        FROM bulid b ,estate e,city c
+        where b.estateId=e.estateId and e.cityId=c.cityId and  estateNAme like "%"#{estateName}"%"
+    </select>
+    <select id="selectAllBUildByEstate" resultMap="build">
+        SELECT * FROM (SELECT b.*,e.estateName FROM estate e,bulid b WHERE b.estateId=e.estateId) AS a WHERE estateId=#{estateId}
+    </select>
+
+
+</mapper>

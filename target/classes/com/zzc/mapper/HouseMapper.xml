@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzc.mapper.HouseMapper">
+    <insert id="insertHouse">
+        insert into house(roomNum,roomArea,buildId,roomtypeId) value (#{roomNum},#{roomArea},#{build.buildId},#{roomType.roomTypeId})
+    </insert>
+    <insert id="inserthouseShow">
+        insert into `house-user`(userId,roomId)VALUE(#{userId},#{roomId})
+    </insert>
+    <delete id="deleteHouse">
+        delete  from house where roomId=#{roomId}
+    </delete>
+    <delete id="userOfHouseCancel">
+        delete from `house-user` WHERE userId=#{id} AND roomId=#{roomId}
+    </delete>
+
+    <select id="findAll" resultMap="house">
+        SELECT * FROM house h,bulid b,estate e,city c,roomtype rt where h.buildId=b.buildId AND b.estateId =e.estateId AND e.cityId=c.cityId AND h.roomtypeId=rt.roomTypeId
+    </select>
+    <select id="userOfHouse" resultMap="house">
+    SELECT * FROM house h,bulid b,estate e,city c,roomtype rt
+    where h.buildId=b.buildId AND b.estateId =e.estateId AND e.cityId=c.cityId AND h.roomtypeId=rt.roomTypeId AND roomId
+    in(SELECT roomId FROM `house-user` where userId=#{id})
+    </select>
+    <resultMap id="house" type="com.zzc.entity.House">
+        <id property="roomId" column="roomId"></id>
+        <result property="roomNum" column="roomNum"></result>
+        <result property="roomArea" column="roomArea"></result>
+        <association property="build" resultMap="com.zzc.mapper.BuildMapper.build"></association>
+        <association property="roomType" resultMap="com.zzc.mapper.RoomTypeMapper.roomType"></association>
+    </resultMap>
+    <resultMap id="userHouse" type="com.zzc.entity.userHouse">
+        <id property="userHouseId" column="userHosueId"></id>
+        <association property="house" resultMap="house"></association>
+        <association property="user" resultMap="com.zzc.mapper.userMapper.user"></association>
+    </resultMap>
+</mapper>

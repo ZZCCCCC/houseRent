@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzc.mapper.EstateMapper">
+
+<resultMap id="estate" type="com.zzc.entity.Estate">
+    <id property="estateId" column="estateId"></id>
+    <result property="estateName" column="estateName"></result>
+    <result property="estateAddress" column="estateAddress"></result>
+    <collection property="city"  resultMap="com.zzc.mapper.userMapper.city"></collection>
+</resultMap>
+    <insert id="addEaste">
+        insert into estate set estateName=#{estateName},estateAddress=#{estateAddress},cityId=#{city.cityId}
+    </insert>
+    <update id="estateUpdate">
+        update estate set estateName=#{estateName}, estateAddress=#{estateAddress}, cityId=#{city.cityId} where estateId=#{estateId}
+    </update>
+    <delete id="deleteByEstateId">
+        delete from estate where estateId=#{estateId}
+    </delete>
+
+    <select id="selectAll" resultMap="estate">
+        select e.*,c.cityName,c.cityAbbreviation,c.cityCenter from estate e,city c where e.cityId=c.cityId
+    </select>
+    <select id="selectByCondition" resultMap="estate">
+        select e.*,c.cityName,c.cityAbbreviation,c.cityCenter
+        from estate e,city c
+        where e.cityId=c.cityId
+        and estateName LIKE"%"#{estateName}"%"
+        and cityName LIKE"%"#{city.cityName}"%"
+
+    </select>
+    <select id="cityAllEstate" resultType="com.zzc.entity.Estate">
+        select estate.* from estate,city where city.cityId=estate.cityId AND estate.cityId=#{id}
+    </select>
+    <select id="cityCountEstate" resultType="java.util.Map">
+        select cityName as name,count(*) as value FROM estate,city where estate.cityId=city.cityId group by estate.cityId
+    </select>
+    <select id="selectAllEstate" resultType="com.zzc.entity.Estate">
+        select * from estate
+    </select>
+</mapper>

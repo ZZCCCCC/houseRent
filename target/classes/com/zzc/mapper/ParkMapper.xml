@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zzc.mapper.ParkMapper">
+    <insert id="insertPark">
+        insert into park(estateId,parkNum) value (#{estate.estateId},#{parkNum})
+    </insert>
+    <insert id="insertparkShow">
+        insert into `user-park`(userId,parkId)value (#{userId},#{parkId})
+    </insert>
+    <delete id="delPark">
+        delete from park where parkId=#{id}
+    </delete>
+    <delete id="delParkShow">
+        delete from `user-park` where userId=#{userId} and parkId=#{parkId}
+    </delete>
+
+    <select id="parkAll" resultMap="park">
+        select * from park p,estate e,city c where p.estateId=e.estateId AND e.cityId=c.cityId
+    </select>
+    <select id="parkShow" resultMap="park">
+        select * from park p,estate e,city c where p.estateId=e.estateId AND e.cityId=c.cityId AND parkId in (SELECT parkId from `user-park` where userId=#{userId})
+    </select>
+
+    <resultMap id="park" type="com.zzc.entity.Park">
+        <id property="parkId" column="parkId"></id>
+        <result property="parkNum" column="parkNum"></result>
+        <association property="estate" resultMap="com.zzc.mapper.EstateMapper.estate"></association>
+    </resultMap>
+</mapper>
